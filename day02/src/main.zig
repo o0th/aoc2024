@@ -42,8 +42,6 @@ pub fn main() !u8 {
                 break;
             }
         }
-
-        std.debug.print("{any}: {any}\n", .{ report.items, validate(report) });
     }
 
     std.debug.print("Valid reports: {}\n", .{safe});
