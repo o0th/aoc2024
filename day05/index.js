@@ -22,17 +22,16 @@ let errors = []
 
 updates.forEach((update) => {
   let correct = true
-  for (const [i, a] of update.entries()) {
-    for (const [j, b] of update.entries()) {
-      if (i === j || j < i) continue;
-      const rule = findRule(rules, a, b)
-      if (rule === undefined) {
-        const exception = findRule(rules, b, a)
-        if (exception !== undefined) {
-          correct = false
-        }
+
+  for (var i = 0; i < update.length - 1; i++) {
+    for (var j = i + 1; j < update.length; j++) {
+      if (!findRule(rules, update[i], update[j]) && findRule(rules, update[j], update[i])) {
+        correct = false
+        break;
       }
     }
+
+    if (!correct) break;
   }
 
   if (correct) {
@@ -46,17 +45,10 @@ updates.forEach((update) => {
 let errors_total = 0
 
 errors.forEach((update) => {
-  for (const [i, a] of update.entries()) {
-    for (const [j, b] of update.entries()) {
-      if (i === j) continue;
-      const rule = findRule(rules, a, b)
-      if (rule !== undefined && i > j) {
-        let temp = update[i]
-        update[i] = update[j]
-        update[j] = temp
-      }
-    }
-  }
+  update.sort((a, b) => {
+    const rule = findRule(rules, a, b)
+    if (rule) return -1
+  })
 
   let middle = (update.length - 1) / 2
   errors_total += update[middle]
@@ -64,3 +56,6 @@ errors.forEach((update) => {
 
 console.log('total: ', total)
 console.log('total errors: ', errors_total)
+
+// 5268
+// 5799
